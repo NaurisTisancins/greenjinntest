@@ -2,12 +2,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type Data = {
-  name: string;
+  revalidate: true;
 };
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ name: 'John Doe' });
+  for (const url of req.body) {
+    await res.revalidate(url);
+  }
+  res.status(200).json({ revalidate: true });
 }
