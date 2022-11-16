@@ -11,12 +11,12 @@ import { useRouter } from 'next/router';
 
 export async function getStaticProps(context: any) {
   const pair = context.params.pair;
-  const pairs = await getCurrencyPair(pair);
+  // const pairs = await getCurrencyPair(pair);
   const data: getAllType | void = await getAllCurrencyPriceData();
   console.log('rerun');
   return {
     props: {
-      pairs,
+      pair,
       bitstamp: data?.bitstamp,
       coinbase: data?.coinbase,
       bitfinex: data?.bitfinex,
@@ -24,7 +24,7 @@ export async function getStaticProps(context: any) {
     // Next.js will attempt to re-generate the page:
     // - When a request comes in
     // - At most once every 10 seconds
-    revalidate: 5, // In seconds
+    // revalidate: 5, // In seconds
   };
 }
 
@@ -41,12 +41,33 @@ export const getStaticPaths = async () => {
   };
 };
 
-export default function Home({ pairs, bitstamp, coinbase, bitfinex }: any) {
+export default function Home({
+  pair,
+
+  bitstamp,
+  coinbase,
+  bitfinex,
+}: any) {
+  const [pairs, setPairs] = useState({});
   const [priceData, setPriceData] = useState({
     bitstamp: 0,
     coinbase: 0,
     bitfinex: 0,
   });
+
+  useEffect(() => {
+    const handler = setInterval(async () => {
+      const pairValues = await getCurrencyPair(pair);
+      console.log(pairValues);
+      setPairs(() => {
+        return pairValues;
+      });
+    }, 10000);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, []);
+
   useEffect(() => {
     if (bitstamp.last) {
       setPriceData((current) => {
@@ -78,7 +99,7 @@ export default function Home({ pairs, bitstamp, coinbase, bitfinex }: any) {
   return (
     <div className={styles.appContainer}>
       <AverageTickerValues data={priceData} />
-      <CurrencyPairs pairs={pairs} />
+      {pairs && <CurrencyPairs pairs={pairs} />}
     </div>
   );
 }

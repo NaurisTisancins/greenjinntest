@@ -9,14 +9,12 @@ import { AverageTickerValues } from '../components/AverageTickerValues';
 import { CurrencyPairs } from '../components/CurrencyPairs';
 
 export async function getStaticProps(context: any) {
-  const pairs = await getCurrencyPair('btcusd');
   const data: getAllType | void = await getAllCurrencyPriceData();
 
   const { params } = context;
   console.log(params);
   return {
     props: {
-      pairs,
       bitstamp: data?.bitstamp,
       coinbase: data?.coinbase,
       bitfinex: data?.bitfinex,
@@ -28,7 +26,7 @@ export async function getStaticProps(context: any) {
   };
 }
 
-export default function Home({ pairs, bitstamp, coinbase, bitfinex }: any) {
+export default function Home({ bitstamp, coinbase, bitfinex }: any) {
   const [priceData, setPriceData] = useState({
     bitstamp: 0,
     coinbase: 0,
@@ -63,7 +61,7 @@ export default function Home({ pairs, bitstamp, coinbase, bitfinex }: any) {
   return (
     <div className={styles.appContainer}>
       <AverageTickerValues data={priceData} />
-      <CurrencyPairs pairs={pairs} />
+      {/* <CurrencyPairs pairs={pairs} /> */}
     </div>
   );
 }

@@ -11,7 +11,21 @@ import styles from '../styles/Home.module.css';
 export const MyResponsiveLine = ({ data }: any) => {
   return (
     <div className={styles.chartContainer}>
-      {data.length > 0 && <ResponsiveLine data={data} />};
+      {data.length > 0 && (
+        <ResponsiveLine
+          data={data}
+          xScale={{ type: 'point' }}
+          yScale={{
+            type: 'linear',
+            min: 'auto',
+            max: 'auto',
+            stacked: true,
+            reverse: false,
+          }}
+          pointSize={10}
+        />
+      )}
+      ;
     </div>
   );
 };

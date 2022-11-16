@@ -23,8 +23,8 @@ interface ICurrencyPairsProps {
 type ChartData = {
   id: string;
   data: {
-    x: number;
-    y: string;
+    x: string;
+    y: Date;
   }[];
 };
 
@@ -32,9 +32,10 @@ export const SelectedCurrencyPairChart: FC<ICurrencyPairsProps> = ({
   pairs,
 }) => {
   const [data, setData] = useState<ChartData[]>([]);
+  const { last, timestamp } = pairs;
 
   useEffect(() => {
-    if (pairs.last) {
+    if (pairs && pairs?.last) {
       setData((current: any) => {
         return [
           ...current,
@@ -42,28 +43,20 @@ export const SelectedCurrencyPairChart: FC<ICurrencyPairsProps> = ({
             id: uuidv4(),
             data: [
               {
-                x: pairs.last,
-                y: dayjs(pairs.timestamp),
+                x: pairs?.last,
+                y: dayjs.unix(Number(pairs.timestamp)).format('YYYY-MM-DD'),
               },
             ],
           },
         ];
       });
     }
-    console.log({
-      id: uuidv4(),
-      data: [
-        {
-          x: pairs.last,
-          y: dayjs(pairs.timestamp),
-        },
-      ],
-    });
-  }, [pairs.last, pairs]);
+    console.log('object', data);
+  }, [pairs]);
 
   return (
     <div className={styles.chartContainer}>
-      {/* <MyResponsiveLine data={data} /> */}
+      {pairs && data && data.length > 0 && <MyResponsiveLine data={data} />}
     </div>
   );
 };
