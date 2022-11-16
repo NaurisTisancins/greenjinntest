@@ -47,8 +47,9 @@
   align-items: center;
   justify-content: center;
   height: 70vh;
+  max-width: 575px;
   width: 100%;
-  background: red;
+  background: darkgray;
   border-radius: 8px;
 }
 

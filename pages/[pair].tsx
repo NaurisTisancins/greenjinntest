@@ -6,14 +6,14 @@ import {
   getCurrencyPair,
 } from '../requests';
 import { AverageTickerValues } from '../components/AverageTickerValues';
-import { CurrencyPairs } from '../components/CurrencyPairs';
+import { CurrencyPairs, tradingPairs } from '../components/CurrencyPairs';
+import { useRouter } from 'next/router';
 
 export async function getStaticProps(context: any) {
-  const pairs = await getCurrencyPair('btcusd');
+  const pair = context.params.pair;
+  const pairs = await getCurrencyPair(pair);
   const data: getAllType | void = await getAllCurrencyPriceData();
-
-  const { params } = context;
-  console.log(params);
+  console.log('rerun');
   return {
     props: {
       pairs,
@@ -24,9 +24,22 @@ export async function getStaticProps(context: any) {
     // Next.js will attempt to re-generate the page:
     // - When a request comes in
     // - At most once every 10 seconds
-    // revalidate: 10, // In seconds
+    revalidate: 5, // In seconds
   };
 }
+
+export const getStaticPaths = async () => {
+  const paths = tradingPairs.map((pair: any) => {
+    return {
+      params: { pair: pair.value.toLowerCase().toString() },
+    };
+  });
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
 
 export default function Home({ pairs, bitstamp, coinbase, bitfinex }: any) {
   const [priceData, setPriceData] = useState({
@@ -59,7 +72,9 @@ export default function Home({ pairs, bitstamp, coinbase, bitfinex }: any) {
         };
       });
     }
+    if (pairs) console.log(pairs);
   }, [bitstamp, coinbase, bitfinex]);
+
   return (
     <div className={styles.appContainer}>
       <AverageTickerValues data={priceData} />

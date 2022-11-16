@@ -11,9 +11,12 @@ export const tradingPairsEndpoints = {
   bitstampSelectPair: 'https://www.bitstamp.net/api/v2/ticker',
 };
 
-export const getCurrencyPairs = async () => {
-  const res = await fetch(tradingPairsEndpoints.bitstampTradingPairs);
+export const getCurrencyPair = async (pair: string) => {
+  const res = await fetch(
+    `${tradingPairsEndpoints.bitstampSelectPair}/${pair}`
+  );
   const pairs = await res.json();
+  console.log(pairs);
   return pairs;
 };
 
