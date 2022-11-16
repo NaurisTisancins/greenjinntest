@@ -16,7 +16,6 @@ export const getCurrencyPair = async (pair: string) => {
     `${tradingPairsEndpoints.bitstampSelectPair}/${pair}`
   );
   const pairs = await res.json();
-  console.log(pairs);
   return pairs;
 };
 
