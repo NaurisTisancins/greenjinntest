@@ -19,7 +19,7 @@ export const MyResponsiveLine = ({ data }: any) => {
             type: 'linear',
             min: 'auto',
             max: 'auto',
-            stacked: true,
+            stacked: false,
             reverse: false,
           }}
           pointSize={10}
