@@ -13,7 +13,6 @@ export async function getStaticProps(context: any) {
   const pair = context.params.pair;
   // const pairs = await getCurrencyPair(pair);
   const data: getAllType | void = await getAllCurrencyPriceData();
-  console.log('rerun');
   return {
     props: {
       pair,
@@ -24,7 +23,7 @@ export async function getStaticProps(context: any) {
     // Next.js will attempt to re-generate the page:
     // - When a request comes in
     // - At most once every 10 seconds
-    // revalidate: 5, // In seconds
+    revalidate: 10, // In seconds
   };
 }
 
